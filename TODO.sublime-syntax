@@ -1,0 +1,53 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+name: TODO File
+file_extensions: [todo]
+scope: com.tlopez.syntax.todo
+
+contexts:
+  # The prototype context is prepended to all contexts but those setting
+  # meta_include_prototype: false.
+  prototype:
+    - include: inline-comment
+    - include: block-comment
+
+  main:
+    - include: notdone
+    - include: done
+    - include: wontdo
+    - include: cantdo
+
+  notdone:
+    - match: '^\s*\[ \]'
+      scope: keyword.control.todo
+
+  done:
+    - match: '^\s*\[(x|X)\]'
+      scope: entity.name.todo
+
+  wontdo:
+    - match: '^\s*\[-\]'
+      scope: string.quoted.double.todo
+
+  cantdo:
+    - match: '^\s*\[!\]'
+      scope: invalid.illegal
+
+  inline-comment:
+    # Comments begin with a '//' and finish at the end of the line.
+    - match: '(?<!:)(\/\/|#)'
+      scope: punctuation.definition.comment.todo
+      push:
+        # This is an anonymous context push for brevity.
+        - meta_scope: comment.line.double-slash.todo
+        - match: $\n?
+          pop: true
+
+  block-comment:
+    - match: '\/\*'
+      scope: punctuation.definition.comment.todo
+      push:
+        - meta_scope: comment.line.block.todo
+        - match: '\*\/'
+          pop: true
